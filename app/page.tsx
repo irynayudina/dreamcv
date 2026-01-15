@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Upload, CheckCircle, FileText, ArrowDown, LogIn, Award, Handshake, AlertCircle } from "lucide-react";
+import { Upload, CheckCircle, FileText, ArrowDown, LogIn, Award, Handshake, AlertCircle, ShieldCheck, HelpCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -18,6 +18,8 @@ export default function Home() {
     useRef<HTMLDivElement>(null),
     useRef<HTMLDivElement>(null),
     useRef<HTMLDivElement>(null),
+    useRef<HTMLDivElement>(null), // FAQ section
+    useRef<HTMLDivElement>(null), // Footer/Enter section
   ];
 
   const router = useRouter();
@@ -47,7 +49,6 @@ export default function Home() {
         setShowPrompt(null);
       }, 3000);
     } else {
-      // All sections filled, go to login
       router.push("/login");
     }
   };
@@ -108,50 +109,49 @@ export default function Home() {
     transition: { duration: 2, repeat: Infinity },
   };
 
+  const templates = [
+    { name: "Modern", desc: "Clean and contemporary, optimized for ATS and tech roles." },
+    { name: "Executive", desc: "Timeless professional layout for leadership and traditional industries." },
+    { name: "Creative", desc: "Bold and expressive design for marketing and creative professionals." },
+    { name: "Minimal", desc: "Elegant simplicity that lets your achievements speak for themselves." }
+  ];
+
   return (
-    <div className="h-screen overflow-y-scroll snap-y snap-mandatory bg-[#f8fafc] text-[#0f172a] scroll-smooth selection:bg-blue-100">
-      {/* Fixed Title */}
-      <div className="fixed top-0 left-0 right-0 z-50 p-8 flex justify-center">
+    <div className="h-screen overflow-y-scroll snap-y snap-mandatory bg-slate-50 text-slate-900 scroll-smooth selection:bg-blue-100">
+      {/* Fixed Header */}
+      <div className="fixed top-0 left-0 right-0 z-50 p-6 flex justify-center pointer-events-none">
         <motion.div
           initial={{ y: -100, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-white/70 backdrop-blur-xl px-8 py-3 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/20"
+          className="bg-white/80 backdrop-blur-xl px-8 py-4 rounded-3xl shadow-sm border border-slate-200 pointer-events-auto flex flex-col items-center"
         >
-          <h1 className="text-2xl font-black tracking-tight bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-            Dream cv
+          <h1 className="text-2xl font-black tracking-tight text-slate-900">
+            Dream CV
           </h1>
+          <p className="text-xs font-bold text-blue-600 uppercase tracking-widest">Build a Recruiter-Ready Future</p>
         </motion.div>
       </div>
 
       {/* Section 1: Upload CV */}
       <section 
         ref={sectionRefs[0]}
-        className="h-screen w-full flex flex-col items-center justify-center snap-start px-6"
+        className="h-screen w-full flex flex-col items-center justify-center snap-start px-6 pt-20"
       >
         <motion.div 
           animate={shakeSection === 0 ? shakeAnimation : (showPrompt === 0 ? pulseAnimation : {})}
-          className={`max-w-2xl w-full p-12 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border transition-colors duration-500 flex flex-col items-center text-center gap-10
+          className={`max-w-2xl w-full p-12 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border transition-all duration-500 flex flex-col items-center text-center gap-10
             ${showPrompt === 0 ? 'border-amber-400 bg-amber-50/30' : 'border-slate-100'}
           `}
         >
-          <div className="relative">
-            <div className="p-8 bg-blue-50 rounded-3xl">
-              <Upload className="w-16 h-16 text-blue-600" />
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-700 rounded-full text-sm font-bold">
+              <ShieldCheck className="w-4 h-4" />
+              Privacy Guaranteed
             </div>
-            {showPrompt === 0 && (
-              <motion.div 
-                initial={{ scale: 0 }} 
-                animate={{ scale: 1 }}
-                className="absolute -top-2 -right-2 bg-amber-500 text-white p-2 rounded-full shadow-lg"
-              >
-                <AlertCircle className="w-5 h-5" />
-              </motion.div>
-            )}
-          </div>
-          
-          <div className="space-y-3">
-            <h2 className="text-4xl font-extrabold tracking-tight">Upload ur CV</h2>
-            <p className="text-slate-500 text-lg max-w-sm">We'll parse your existing data to get you started on your new journey.</p>
+            <h2 className="text-4xl font-extrabold tracking-tight">Import Your Professional History</h2>
+            <p className="text-slate-500 text-lg max-w-sm mx-auto leading-relaxed">
+              Securely upload your current CV. Our AI will parse your data into a structured format, keeping your information encrypted and private.
+            </p>
           </div>
           
           <label className="w-full group cursor-pointer">
@@ -161,19 +161,15 @@ export default function Home() {
             `}>
               {cvFile ? (
                 <>
-                  <div className="p-3 bg-emerald-100 rounded-full">
-                    <CheckCircle className="w-8 h-8 text-emerald-600" />
-                  </div>
+                  <CheckCircle className="w-12 h-12 text-emerald-500" />
                   <span className="text-emerald-900 font-bold text-lg">{cvFile.name}</span>
-                  <span className="text-emerald-600 text-sm">File uploaded successfully!</span>
+                  <span className="text-emerald-600 text-sm">Document processed successfully</span>
                 </>
               ) : (
                 <>
-                  <div className="p-3 bg-slate-100 group-hover:bg-blue-100 transition-colors rounded-full text-slate-400 group-hover:text-blue-500">
-                    <FileText className="w-8 h-8" />
-                  </div>
-                  <span className="text-slate-600 font-bold text-lg">Drop your file here or click to browse</span>
-                  <span className="text-slate-400 text-sm italic">Supports PDF, DOC, DOCX</span>
+                  <Upload className="w-12 h-12 text-slate-300 group-hover:text-blue-500 transition-colors" />
+                  <span className="text-slate-600 font-bold text-lg">Select CV to Upload</span>
+                  <span className="text-slate-400 text-sm">PDF, DOCX supported • Max 5MB</span>
                 </>
               )}
             </div>
@@ -187,20 +183,22 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Section 2: Verify Skills */}
+      {/* Section 2: Skill Verification */}
       <section 
         ref={sectionRefs[1]}
         className="h-screen w-full flex flex-col items-center justify-center snap-start px-6"
       >
         <motion.div 
           animate={shakeSection === 1 ? shakeAnimation : (showPrompt === 1 ? pulseAnimation : {})}
-          className={`max-w-4xl w-full p-12 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border transition-colors duration-500 flex flex-col items-center text-center gap-12
+          className={`max-w-4xl w-full p-12 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border transition-all duration-500 flex flex-col items-center text-center gap-12
             ${showPrompt === 1 ? 'border-amber-400 bg-amber-50/30' : 'border-slate-100'}
           `}
         >
-          <div className="space-y-3">
-            <h2 className="text-4xl font-extrabold tracking-tight">Verify your skills</h2>
-            <p className="text-slate-500 text-lg">Choose how you want to showcase your expertise.</p>
+          <div className="space-y-4">
+            <h2 className="text-4xl font-extrabold tracking-tight">Validate Your Expertise</h2>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+              Boost your profile's credibility by choosing how you want to present your skills to potential recruiters.
+            </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
@@ -208,76 +206,74 @@ export default function Home() {
               onClick={() => setSkillsMethod("test")}
               className={`
                 group p-10 rounded-[2rem] border-2 transition-all text-left flex flex-col gap-6 relative
-                ${skillsMethod === "test" ? 'border-blue-500 bg-blue-50/50 shadow-inner' : 'border-slate-100 hover:border-blue-200 hover:bg-slate-50/50 hover:shadow-lg'}
+                ${skillsMethod === "test" ? 'border-blue-500 bg-blue-50/50' : 'border-slate-100 hover:border-blue-200 hover:bg-slate-50/50'}
               `}
             >
-              <div className={`p-4 rounded-2xl w-fit transition-colors ${skillsMethod === "test" ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-400 group-hover:bg-blue-100 group-hover:text-blue-600'}`}>
-                <Award className="w-10 h-10" />
-              </div>
+              <Award className={`w-12 h-12 ${skillsMethod === "test" ? 'text-blue-600' : 'text-slate-400 group-hover:text-blue-500'}`} />
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold">Take the test</h3>
-                <p className="text-slate-500 leading-relaxed">Verify your skills through our interactive and gamified assessments.</p>
+                <h3 className="text-2xl font-bold">Verified Assessments</h3>
+                <p className="text-slate-500 leading-relaxed text-sm">
+                  Complete short, skill-specific tests to earn verification badges. Proven skills increase recruiter engagement by up to 40%.
+                </p>
               </div>
-              {skillsMethod === "test" && (
-                <CheckCircle className="absolute top-6 right-6 w-8 h-8 text-blue-600" />
-              )}
             </button>
 
             <button
               onClick={() => setSkillsMethod("trust")}
               className={`
                 group p-10 rounded-[2rem] border-2 transition-all text-left flex flex-col gap-6 relative
-                ${skillsMethod === "trust" ? 'border-indigo-500 bg-indigo-50/50 shadow-inner' : 'border-slate-100 hover:border-indigo-200 hover:bg-slate-50/50 hover:shadow-lg'}
+                ${skillsMethod === "trust" ? 'border-slate-800 bg-slate-50' : 'border-slate-100 hover:border-slate-300 hover:bg-slate-50'}
               `}
             >
-              <div className={`p-4 rounded-2xl w-fit transition-colors ${skillsMethod === "trust" ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400 group-hover:bg-indigo-100 group-hover:text-indigo-600'}`}>
-                <Handshake className="w-10 h-10" />
-              </div>
+              <Handshake className={`w-12 h-12 ${skillsMethod === "trust" ? 'text-slate-900' : 'text-slate-400 group-hover:text-slate-600'}`} />
               <div className="space-y-2">
-                <h3 className="text-2xl font-bold">Trust my word</h3>
-                <p className="text-slate-500 leading-relaxed">Self-declare your skills now and provide verification when requested later.</p>
+                <h3 className="text-2xl font-bold">Standard Declaration</h3>
+                <p className="text-slate-500 leading-relaxed text-sm">
+                  Self-declare your skills now. You can provide additional context, portfolios, or verification later during the interview phase.
+                </p>
               </div>
-              {skillsMethod === "trust" && (
-                <CheckCircle className="absolute top-6 right-6 w-8 h-8 text-indigo-600" />
-              )}
             </button>
           </div>
         </motion.div>
       </section>
 
-      {/* Section 3: Choose Template */}
+      {/* Section 3: Template Choice */}
       <section 
         ref={sectionRefs[2]}
         className="h-screen w-full flex flex-col items-center justify-center snap-start px-6"
       >
         <motion.div 
           animate={shakeSection === 2 ? shakeAnimation : (showPrompt === 2 ? pulseAnimation : {})}
-          className={`max-w-5xl w-full p-12 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.05)] border transition-colors duration-500 flex flex-col items-center text-center gap-12
+          className={`max-w-5xl w-full p-12 bg-white rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border transition-all duration-500 flex flex-col items-center text-center gap-12
             ${showPrompt === 2 ? 'border-amber-400 bg-amber-50/30' : 'border-slate-100'}
           `}
         >
-          <div className="space-y-3">
-            <h2 className="text-4xl font-extrabold tracking-tight">Choose any template</h2>
-            <p className="text-slate-500 text-lg">Select a layout for your future CV building, where ur cv will be parsed into.</p>
+          <div className="space-y-4">
+            <h2 className="text-4xl font-extrabold tracking-tight">Select a Recruiter-Ready Design</h2>
+            <p className="text-slate-500 text-lg max-w-2xl mx-auto">
+              Your data will be instantly formatted into your chosen layout. Switch designs at any time.
+            </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-            {["Modern", "Classic", "Creative", "Minimal"].map((template) => (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full text-left">
+            {templates.map((template) => (
               <button
-                key={template}
-                onClick={() => setSelectedTemplate(template)}
+                key={template.name}
+                onClick={() => setSelectedTemplate(template.name)}
                 className={`
-                  group aspect-[3/4.2] rounded-3xl border-2 transition-all flex flex-col p-6 gap-4 relative overflow-hidden
-                  ${selectedTemplate === template ? 'border-blue-500 bg-blue-50/50 ring-4 ring-blue-100 shadow-xl' : 'border-slate-100 hover:border-slate-300 hover:shadow-xl hover:scale-[1.02] bg-slate-50/30'}
+                  group rounded-3xl border-2 transition-all flex flex-col p-6 gap-4 relative
+                  ${selectedTemplate === template.name ? 'border-blue-500 bg-blue-50/30 ring-4 ring-blue-50' : 'border-slate-100 hover:border-slate-300 bg-slate-50/30'}
                 `}
               >
-                <div className={`flex-1 rounded-xl shadow-inner transition-colors ${selectedTemplate === template ? 'bg-blue-100/50' : 'bg-slate-200 group-hover:bg-slate-300/50'}`} />
-                <span className={`font-bold text-lg ${selectedTemplate === template ? 'text-blue-700' : 'text-slate-700'}`}>{template}</span>
-                
-                {selectedTemplate === template && (
-                  <div className="absolute top-4 right-4 bg-blue-600 text-white p-1.5 rounded-full shadow-lg">
-                    <CheckCircle className="w-5 h-5" />
-                  </div>
+                <div className="aspect-[3/4] rounded-xl bg-slate-200 shadow-inner flex items-center justify-center text-slate-400">
+                  <FileText className="w-12 h-12 opacity-20" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg mb-1">{template.name}</h4>
+                  <p className="text-xs text-slate-500 leading-relaxed">{template.desc}</p>
+                </div>
+                {selectedTemplate === template.name && (
+                  <CheckCircle className="absolute top-4 right-4 w-6 h-6 text-blue-600" />
                 )}
               </button>
             ))}
@@ -285,95 +281,126 @@ export default function Home() {
         </motion.div>
       </section>
 
-      {/* Section 4: Enter */}
+      {/* Section 4: Trust & FAQ */}
       <section 
         ref={sectionRefs[3]}
         className="h-screen w-full flex flex-col items-center justify-center snap-start px-6"
       >
-        <div className="flex flex-col items-center gap-14 text-center">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            whileInView={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, type: "spring" }}
-            className="space-y-6"
-          >
-            <h2 className="text-7xl font-black tracking-tighter text-slate-900 leading-none">
-              Enter the <br /> 
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent italic">future of CVs</span>
-            </h2>
-            <p className="text-2xl text-slate-400 font-medium">Your professional journey starts here.</p>
-          </motion.div>
-
-          <div className="relative group">
-            <button
-              onClick={handleEnterClick}
-              className="relative z-10 flex items-center gap-4 px-16 py-8 bg-slate-900 text-white rounded-[2rem] text-3xl font-black transition-all hover:bg-slate-800 hover:scale-110 active:scale-95 shadow-[0_20px_50px_rgba(0,0,0,0.3)] group-hover:shadow-[0_20px_50px_rgba(0,0,0,0.4)]"
-            >
-              <span>Enter</span>
-              <AnimatePresence mode="wait">
-                {getFirstUnfilledSection() === -1 ? (
-                  <motion.div key="login" initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} exit={{ x: 10, opacity: 0 }}>
-                    <LogIn className="w-10 h-10" />
-                  </motion.div>
-                ) : (
-                  <motion.div key="scroll" initial={{ y: -10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 10, opacity: 0 }}>
-                    <ArrowDown className="w-10 h-10 animate-bounce" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
+        <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-2 gap-12">
+          <div className="space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-4xl font-extrabold tracking-tight">Trust & Security</h2>
+              <p className="text-slate-500 text-lg">We prioritize your data privacy as much as your career success.</p>
+            </div>
             
-            {/* Completion dots */}
-            <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 flex gap-3">
-              {[cvFile, skillsMethod, selectedTemplate].map((filled, i) => (
-                <motion.div 
-                  key={i}
-                  animate={filled ? { scale: [1, 1.2, 1], backgroundColor: '#10b981' } : {}}
-                  className={`w-3 h-3 rounded-full transition-colors duration-500 ${filled ? 'bg-emerald-500' : 'bg-slate-200'}`}
-                />
+            <div className="space-y-6">
+              {[
+                { icon: ShieldCheck, title: "AES-256 Encryption", text: "Your CV and personal data are encrypted at rest and in transit." },
+                { icon: CheckCircle, title: "Verified Credentials", text: "Recruiters trust Dream CV for our rigorous assessment standards." },
+                { icon: HelpCircle, title: "Human-Centric Design", text: "Built for jobseekers, by HR experts who understand the hiring process." }
+              ].map((item, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="mt-1"><item.icon className="w-6 h-6 text-blue-600" /></div>
+                  <div>
+                    <h4 className="font-bold">{item.title}</h4>
+                    <p className="text-sm text-slate-500">{item.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-white p-10 rounded-[2.5rem] shadow-sm border border-slate-100 space-y-8">
+            <h3 className="text-2xl font-bold">Common Questions</h3>
+            <div className="space-y-6">
+              {[
+                { q: "Is it really free?", a: "Dream CV offers a robust free tier for all essential features." },
+                { q: "Can I download as PDF?", a: "Yes, all templates are optimized for high-quality PDF exports." },
+                { q: "Is my data shared?", a: "We never sell your data. You control exactly who sees your CV." }
+              ].map((faq, i) => (
+                <div key={i} className="space-y-2">
+                  <h4 className="font-bold text-slate-800">Q: {faq.q}</h4>
+                  <p className="text-sm text-slate-500 leading-relaxed">{faq.a}</p>
+                </div>
               ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* Floating Enter Button (Visible when not at bottom) */}
-      <AnimatePresence>
-        {activeSection < 3 && (
-          <motion.button
-            initial={{ opacity: 0, scale: 0.5 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.5 }}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={handleEnterClick}
-            className="fixed bottom-12 right-12 z-50 flex items-center gap-3 px-8 py-4 bg-white/80 backdrop-blur-xl text-slate-900 rounded-2xl font-black shadow-[0_10px_40px_rgba(0,0,0,0.1)] border border-slate-200/50 hover:bg-white transition-all group"
-          >
-            Enter
-            <ArrowDown className="w-5 h-5 group-hover:translate-y-1 transition-transform" />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {/* Section 5: Final CTA & Footer */}
+      <section 
+        ref={sectionRefs[4]}
+        className="h-screen w-full flex flex-col items-center justify-between snap-start px-6 py-20"
+      >
+        <div /> {/* Spacer */}
 
-      {/* Side Progress Navigation */}
-      <div className="fixed left-8 top-1/2 -translate-y-1/2 flex flex-col gap-5 z-40">
-        {[0, 1, 2, 3].map((i) => (
+        <div className="text-center space-y-12">
+          <div className="space-y-6">
+            <h2 className="text-6xl font-black tracking-tighter text-slate-900 leading-none">
+              Ready to land your <br /> 
+              <span className="text-blue-600 italic">dream role?</span>
+            </h2>
+            <p className="text-2xl text-slate-400 font-medium max-w-lg mx-auto">Join thousands of professionals building recruiter-ready profiles today.</p>
+          </div>
+
+          <button
+            onClick={handleEnterClick}
+            className="group relative flex items-center gap-4 px-16 py-8 bg-slate-900 text-white rounded-[2rem] text-2xl font-black transition-all hover:bg-slate-800 hover:scale-105 active:scale-95 shadow-xl"
+          >
+            <span>Launch Your Builder</span>
+            {getFirstUnfilledSection() === -1 ? (
+              <LogIn className="w-8 h-8" />
+            ) : (
+              <ArrowDown className="w-8 h-8 animate-bounce" />
+            )}
+          </button>
+        </div>
+
+        <footer className="w-full max-w-4xl border-t border-slate-200 pt-10 flex flex-col md:flex-row justify-between items-center gap-6 text-sm text-slate-400">
+          <div className="flex gap-8 font-bold">
+            <a href="#" className="hover:text-slate-900 transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-slate-900 transition-colors">Terms of Service</a>
+            <a href="#" className="hover:text-slate-900 transition-colors">Contact Support</a>
+          </div>
+          <p>© 2026 Dream CV. Empowering careers everywhere.</p>
+        </footer>
+      </section>
+
+      {/* Floating Navigation (Desktop) */}
+      <div className="fixed left-12 top-1/2 -translate-y-1/2 hidden lg:flex flex-col gap-6 z-40">
+        {['Upload', 'Verify', 'Template', 'FAQ', 'Finish'].map((label, i) => (
           <button
             key={i}
             onClick={() => scrollToSection(i)}
-            className="group relative flex items-center"
+            className="group flex items-center gap-4"
           >
-            <div className={`w-1.5 transition-all duration-500 rounded-full ${
-              activeSection === i ? 'h-10 bg-blue-600' : 'h-4 bg-slate-300 group-hover:bg-slate-400'
+            <div className={`w-2 transition-all duration-500 rounded-full ${
+              activeSection === i ? 'h-10 bg-blue-600' : 'h-2 bg-slate-300 group-hover:bg-slate-400'
             }`} />
-            <span className={`absolute left-6 text-sm font-bold transition-all duration-300 whitespace-nowrap opacity-0 group-hover:opacity-100 translate-x-[-10px] group-hover:translate-x-0 ${
-              activeSection === i ? 'text-blue-600' : 'text-slate-400'
+            <span className={`text-xs font-black uppercase tracking-widest transition-all duration-300 ${
+              activeSection === i ? 'text-blue-600 translate-x-0' : 'text-slate-300 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0'
             }`}>
-              {['Upload CV', 'Skills', 'Template', 'Finish'][i]}
+              {label}
             </span>
           </button>
         ))}
       </div>
+
+      {/* Mobile Indicator */}
+      <AnimatePresence>
+        {activeSection < 4 && (
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            onClick={handleEnterClick}
+            className="fixed bottom-10 right-10 z-50 lg:hidden flex items-center gap-2 px-6 py-3 bg-white text-slate-900 rounded-full font-bold shadow-lg border border-slate-200"
+          >
+            Next <ArrowDown className="w-4 h-4" />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
