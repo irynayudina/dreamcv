@@ -5,8 +5,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Upload, CheckCircle, FileText, ArrowDown, LogIn, Award, Handshake, AlertCircle, ShieldCheck, HelpCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import UploadCV from "@/components/UploadCV";
+import { useCVStore } from "@/store/cv-store";
+
 export default function Home() {
-  const [cvFile, setCvFile] = useState<File | null>(null);
+  const { cvData } = useCVStore();
+  const cvFile = cvData.personalInfo.name ? { name: cvData.personalInfo.name } : null;
   const [skillsMethod, setSkillsMethod] = useState<"test" | "trust" | null>(null);
   const [selectedTemplate, setSelectedTemplate] = useState<string | null>(null);
   const [activeSection, setActiveSection] = useState(0);
@@ -154,32 +158,7 @@ export default function Home() {
             </p>
           </div>
           
-          <label className="w-full group cursor-pointer">
-            <div className={`
-              w-full p-10 rounded-3xl border-3 border-dashed transition-all duration-300 flex flex-col items-center gap-4
-              ${cvFile ? 'border-emerald-500 bg-emerald-50/50' : 'border-slate-200 group-hover:border-blue-400 bg-slate-50/50 group-hover:bg-blue-50/30'}
-            `}>
-              {cvFile ? (
-                <>
-                  <CheckCircle className="w-12 h-12 text-emerald-500" />
-                  <span className="text-emerald-900 font-bold text-lg">{cvFile.name}</span>
-                  <span className="text-emerald-600 text-sm">Document processed successfully</span>
-                </>
-              ) : (
-                <>
-                  <Upload className="w-12 h-12 text-slate-300 group-hover:text-blue-500 transition-colors" />
-                  <span className="text-slate-600 font-bold text-lg">Select CV to Upload</span>
-                  <span className="text-slate-400 text-sm">PDF, DOCX supported • Max 5MB</span>
-                </>
-              )}
-            </div>
-            <input 
-              type="file" 
-              className="hidden" 
-              onChange={(e) => setCvFile(e.target.files?.[0] || null)}
-              accept=".pdf,.doc,.docx"
-            />
-          </label>
+          <UploadCV />
         </motion.div>
       </section>
 
